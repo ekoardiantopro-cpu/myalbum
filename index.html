@@ -1,99 +1,299 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Album Foto Pribadi</title>
-<style>
-body { margin:0; padding:0; font-family: Arial, sans-serif; }
-.album-container { padding: 20px; background: linear-gradient(135deg, #ffe3ec, #e0f7fa); min-height: 100vh; }
-.menu-bar { display:flex; gap:15px; margin-bottom:20px; justify-content:center; align-items:center; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); padding:10px 20px; border-radius:15px; }
-.menu-bar button { background: linear-gradient(135deg, #89f7fe, #66a6ff); border:none; padding:8px 15px; border-radius:10px; cursor:pointer; font-weight:bold; color:#fff; transition: all 0.3s ease; }
-.menu-bar button:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(102,166,255,0.6); }
-.album-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:20px; }
-.album-card { position:relative; border-radius:15px; overflow:hidden; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border:2px solid rgba(255,255,255,0.3); transition: all 0.3s ease; }
-.album-card:hover { box-shadow: 0 0 20px rgba(0,0,0,0.3); border-color: #00f0ff; }
-.album-title { text-align:center; padding:10px 0; font-weight:bold; color:#333; font-size:16px; cursor:pointer; }
-.album-frame { width:100%; height:0; border:none; border-radius:10px; transition: height 0.5s ease; }
-.album-frame.open { height:400px; }
-.login-container { display:flex; justify-content:center; align-items:center; height:100vh; position:relative; overflow:hidden; }
-.login-background { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.3; z-index:0; animation: slideBg 15s infinite; }
-@keyframes slideBg { 0%,33%,66%,100%{opacity:0.3;} }
-.login-box { position:relative; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); padding:30px; border-radius:15px; display:flex; flex-direction:column; gap:10px; z-index:1; }
-.error-text { color:red; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Album Foto Full</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .album-container { 
+      padding: 20px; 
+      background: linear-gradient(135deg, #ffe3ec, #e0f7fa); 
+      min-height: 100vh; 
+    }
+    .menu-bar { 
+      display:flex; gap:15px; margin-bottom:20px; justify-content:center; align-items:center; 
+      background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); padding:10px 20px; border-radius:15px; 
+    }
+    .menu-bar button { 
+      background: linear-gradient(135deg, #89f7fe, #66a6ff); border:none; padding:8px 15px; border-radius:10px; 
+      cursor:pointer; font-weight:bold; color:#fff; transition: all 0.3s ease; 
+    }
+    .menu-bar button:hover { 
+      transform: scale(1.05); box-shadow: 0 0 15px rgba(102,166,255,0.6); 
+    }
+    .album-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:20px; }
+    .album-card { position:relative; border-radius:15px; overflow:hidden; background: rgba(255,255,255,0.2); 
+      backdrop-filter: blur(10px); border:2px solid rgba(255,255,255,0.3); transition: all 0.3s ease; }
+    .album-card:hover { box-shadow: 0 0 20px rgba(0,0,0,0.3); border-color: #00f0ff; }
+    .album-title { text-align:center; padding:10px 0; font-weight:bold; color:#333; font-size:16px; cursor:pointer; }
+    .album-frame { width:100%; height:0; border:none; border-radius:10px; transition: height 0.5s ease; }
+    .album-frame.open { height:400px; }
+    .album-controls { position:absolute; bottom:10px; left:10px; display:flex; gap:5px; background: rgba(0,0,0,0.3); padding:5px; border-radius:5px; }
+    .settings-box { position:absolute; top:60px; right:20px; background:#ffffffaa; backdrop-filter: blur(10px); padding:20px; border-radius:10px; max-width:400px; z-index:100; }
+    .settings-item { display:flex; flex-direction:column; margin-bottom:10px; }
+    .settings-item select, .settings-item input { padding:5px; border-radius:5px; border:1px solid #ccc; margin-bottom:5px; }
+    .settings-add { display:flex; flex-direction:column; gap:5px; margin-top:10px; }
+    .settings-add button { background:#66a6ff; color:#fff; border:none; border-radius:5px; padding:5px; cursor:pointer; }
+    .login-container { display:flex; justify-content:center; align-items:center; height:100vh; position:relative; overflow:hidden; }
+    .login-background { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.3; z-index:0; animation: slideBg 15s infinite; }
+    @keyframes slideBg { 0%{opacity:0.3;} 33%{opacity:0.3;} 66%{opacity:0.3;} 100%{opacity:0.3;} }
+    .login-box { position:relative; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); padding:30px; border-radius:15px; display:flex; flex-direction:column; gap:10px; z-index:1; }
+    .error-text { color:red; }
+  </style>
 </head>
 <body>
-<div class="login-container">
-  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60" class="login-background" alt="bg">
-  <div class="login-box">
-    <h2>Masukkan Password</h2>
-    <input type="password" id="passInput" placeholder="Password">
-    <p class="error-text" id="errorText"></p>
-    <button id="loginBtn">Masuk</button>
-  </div>
-</div>
+  <div id="app"></div>
 
-<div class="album-container" style="display:none;">
-  <div class="menu-bar">
-    <button id="logoutBtn">Keluar</button>
-  </div>
-  <div class="album-grid" id="albumGrid"></div>
-</div>
+  <script>
+    // ===== Data Awal =====
+    const state = {
+      auth: false,
+      passInput: "",
+      error: "",
+      DEFAULT_PASSWORD: "12345",
+      bgImages: [
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60",
+        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
+        "https://images.unsplash.com/photo-1493244040629-496f6d136cc3?auto=format&fit=crop&w=800&q=60",
+      ],
+      albums: [
+        { id:1, title:"Dokumen Penting", link:"https://drive.google.com/drive/folders/139FME2cPBYOlr8c-e4XrGv8NwT5Oc1-i", open:false, slideshowIndex:0 },
+        { id:2, title:"Liburan Bali", link:"https://drive.google.com/drive/folders/1-example-bali", open:false, slideshowIndex:0 },
+        { id:3, title:"Ulang Tahun", link:"https://drive.google.com/drive/folders/2-example-birthday", open:false, slideshowIndex:0 },
+        { id:4, title:"Kegiatan Sekolah", link:"https://drive.google.com/drive/folders/3-example-school", open:false, slideshowIndex:0 },
+        { id:5, title:"Foto Keluarga", link:"https://drive.google.com/drive/folders/4-example-family", open:false, slideshowIndex:0 }
+      ],
+      settingsOpen: false,
+      selectedAlbumId: 1,
+      fieldToEdit: "title",
+      newValue: "",
+      newPassword: "",
+      newBg: ""
+    };
 
-<script>
-let DEFAULT_PASSWORD = '12345';
-const albums = [
-  {id:1, title:'Dokumen Penting', link:'https://drive.google.com/embeddedfolderview?id=139FME2cPBYOlr8c-e4XrGv8NwT5Oc1-i#grid'},
-  {id:2, title:'Liburan Bali', link:'https://drive.google.com/embeddedfolderview?id=1-example-bali#grid'},
-  {id:3, title:'Ulang Tahun', link:'https://drive.google.com/embeddedfolderview?id=2-example-birthday#grid'},
-  {id:4, title:'Kegiatan Sekolah', link:'https://drive.google.com/embeddedfolderview?id=3-example-school#grid'},
-  {id:5, title:'Foto Keluarga', link:'https://drive.google.com/embeddedfolderview?id=4-example-family#grid'}
-];
+    // ===== Fungsi Helper =====
+    function getDrivePreviewLink(url) {
+      if (!url) return "";
+      if (url.includes("drive.google.com/drive/folders")) {
+        const folderId = url.split("/folders/")[1].split("?")[0];
+        return `https://drive.google.com/embeddedfolderview?id=${folderId}#grid`;
+      }
+      if (url.includes("drive.google.com/file/d/")) {
+        const fileId = url.split("/file/d/")[1].split("/")[0];
+        return `https://drive.google.com/file/d/${fileId}/preview`;
+      }
+      return url;
+    }
 
-const loginContainer = document.querySelector('.login-container');
-const albumContainer = document.querySelector('.album-container');
-const passInput = document.getElementById('passInput');
-const errorText = document.getElementById('errorText');
-const loginBtn = document.getElementById('loginBtn');
-const albumGrid = document.getElementById('albumGrid');
-const logoutBtn = document.getElementById('logoutBtn');
+    function render() {
+      const app = document.getElementById("app");
+      app.innerHTML = "";
 
-function showAlbums(){
-  albumGrid.innerHTML='';
-  albums.forEach(album => {
-    const card = document.createElement('div');
-    card.className='album-card';
-    const title = document.createElement('div');
-    title.className='album-title';
-    title.textContent=album.title;
-    const frame = document.createElement('iframe');
-    frame.src=album.link;
-    frame.className='album-frame';
-    title.onclick = () => frame.classList.toggle('open');
-    card.appendChild(title);
-    card.appendChild(frame);
-    albumGrid.appendChild(card);
-  });
-}
+      // ===== Login =====
+      if (!state.auth) {
+        const loginDiv = document.createElement("div");
+        loginDiv.className = "login-container";
 
-function login(){
-  if(passInput.value === DEFAULT_PASSWORD){
-    loginContainer.style.display='none';
-    albumContainer.style.display='block';
-    showAlbums();
-  } else { errorText.textContent='Password salah'; }
-}
+        state.bgImages.forEach(bg => {
+          const img = document.createElement("img");
+          img.className = "login-background";
+          img.src = bg;
+          loginDiv.appendChild(img);
+        });
 
-loginBtn.addEventListener('click', login);
-passInput.addEventListener('keydown', (e) => { if(e.key==='Enter') login(); });
+        const box = document.createElement("div");
+        box.className = "login-box";
+        const h2 = document.createElement("h2");
+        h2.innerText = "Masukkan Password";
+        const input = document.createElement("input");
+        input.type = "password";
+        input.placeholder = "Password";
+        input.value = state.passInput;
+        input.oninput = (e) => { state.passInput = e.target.value; state.error=""; };
+        input.onkeydown = (e) => { if(e.key==="Enter") checkPassword(); };
+        const btn = document.createElement("button");
+        btn.innerText = "Masuk";
+        btn.onclick = checkPassword;
 
-logoutBtn.addEventListener('click', () => {
-  albumContainer.style.display='none';
-  loginContainer.style.display='flex';
-  passInput.value='';
-  errorText.textContent='';
-});
-</script>
+        const errorP = document.createElement("p");
+        errorP.className = "error-text";
+        errorP.innerText = state.error;
+
+        box.appendChild(h2);
+        box.appendChild(input);
+        box.appendChild(errorP);
+        box.appendChild(btn);
+        loginDiv.appendChild(box);
+        app.appendChild(loginDiv);
+        return;
+      }
+
+      // ===== Main Album =====
+      const container = document.createElement("div");
+      container.className = "album-container";
+
+      // Menu Bar
+      const menu = document.createElement("div");
+      menu.className = "menu-bar";
+
+      const settingsBtn = document.createElement("button");
+      settingsBtn.innerText = "Settings";
+      settingsBtn.onclick = () => { state.settingsOpen = !state.settingsOpen; render(); };
+
+      const logoutBtn = document.createElement("button");
+      logoutBtn.innerText = "Keluar";
+      logoutBtn.onclick = () => { state.auth = false; render(); };
+
+      menu.appendChild(settingsBtn);
+      menu.appendChild(logoutBtn);
+      container.appendChild(menu);
+
+      // Settings Box
+      if(state.settingsOpen){
+        const sBox = document.createElement("div");
+        sBox.className = "settings-box";
+
+        // Pilih Album
+        const selectAlbum = document.createElement("select");
+        state.albums.forEach(a=>{
+          const opt = document.createElement("option");
+          opt.value = a.id;
+          opt.innerText = a.title;
+          if(a.id===state.selectedAlbumId) opt.selected=true;
+          selectAlbum.appendChild(opt);
+        });
+        selectAlbum.onchange = (e)=>{ state.selectedAlbumId = parseInt(e.target.value); render(); };
+        const div1 = document.createElement("div");
+        div1.className="settings-item";
+        const label1 = document.createElement("label"); label1.innerText="Pilih Album:"; 
+        div1.appendChild(label1); div1.appendChild(selectAlbum);
+
+        // Field yang diedit
+        const selectField = document.createElement("select");
+        ["title","link"].forEach(f=>{
+          const opt = document.createElement("option"); opt.value=f; opt.innerText=f==="title"?"Judul":"Link"; 
+          if(f===state.fieldToEdit) opt.selected=true; selectField.appendChild(opt);
+        });
+        selectField.onchange = (e)=>{ state.fieldToEdit = e.target.value; };
+        const div2 = document.createElement("div");
+        div2.className="settings-item";
+        const label2 = document.createElement("label"); label2.innerText="Field yang ingin diedit:";
+        div2.appendChild(label2); div2.appendChild(selectField);
+
+        // Nilai baru
+        const inputNewValue = document.createElement("input");
+        inputNewValue.value = state.newValue;
+        inputNewValue.oninput=(e)=>state.newValue=e.target.value;
+        const div3 = document.createElement("div");
+        div3.className="settings-item";
+        const label3 = document.createElement("label"); label3.innerText="Nilai baru:";
+        div3.appendChild(label3); div3.appendChild(inputNewValue);
+
+        // Tombol Update/Add/Delete
+        const divAdd = document.createElement("div"); divAdd.className="settings-add";
+        ["Update Album","Tambah Album","Hapus Album"].forEach(text=>{
+          const btn = document.createElement("button"); btn.innerText=text;
+          btn.onclick = ()=>{ 
+            if(text==="Update Album") updateAlbum();
+            else if(text==="Tambah Album") addAlbum();
+            else deleteAlbum();
+          };
+          divAdd.appendChild(btn);
+        });
+
+        sBox.appendChild(div1);
+        sBox.appendChild(div2);
+        sBox.appendChild(div3);
+        sBox.appendChild(divAdd);
+
+        // Password baru & reset
+        const divPass = document.createElement("div"); divPass.className="settings-item";
+        const labelPass = document.createElement("label"); labelPass.innerText="Ganti Password Baru:";
+        const inputPass = document.createElement("input"); inputPass.placeholder="Password baru"; inputPass.value=state.newPassword;
+        inputPass.oninput=(e)=>state.newPassword=e.target.value;
+        const btnRenew = document.createElement("button"); btnRenew.innerText="Perbarui Password"; btnRenew.onclick=renewPassword;
+        const btnReset = document.createElement("button"); btnReset.innerText="Reset Password Default"; btnReset.onclick=resetPassword;
+        divPass.appendChild(labelPass); divPass.appendChild(inputPass); divPass.appendChild(btnRenew); divPass.appendChild(btnReset);
+
+        // Background baru
+        const divBg = document.createElement("div"); divBg.className="settings-item";
+        const labelBg = document.createElement("label"); labelBg.innerText="Ganti Background Utama:";
+        const inputBg = document.createElement("input"); inputBg.placeholder="URL background baru"; inputBg.value=state.newBg;
+        inputBg.oninput=(e)=>state.newBg=e.target.value;
+        const btnBg = document.createElement("button"); btnBg.innerText="Perbarui Background"; btnBg.onclick=changeBackground;
+        divBg.appendChild(labelBg); divBg.appendChild(inputBg); divBg.appendChild(btnBg);
+
+        sBox.appendChild(divPass);
+        sBox.appendChild(divBg);
+        container.appendChild(sBox);
+      }
+
+      // Album Grid
+      const grid = document.createElement("div");
+      grid.className = "album-grid";
+
+      state.albums.forEach(album=>{
+        const card = document.createElement("div"); card.className="album-card";
+        const title = document.createElement("div"); title.className="album-title"; title.innerText=album.title;
+        title.onclick = ()=>{ album.open=!album.open; render(); };
+        const iframe = document.createElement("iframe"); iframe.className="album-frame"; iframe.src=getDrivePreviewLink(album.link);
+        if(album.open) iframe.classList.add("open");
+        card.appendChild(title);
+        card.appendChild(iframe);
+
+        if(album.open){
+          const controls = document.createElement("div"); controls.className="album-controls";
+          ["Zoom In","Zoom Out","Fullscreen"].forEach(txt=>{
+            const btn=document.createElement("button"); btn.innerText=txt;
+            btn.onclick=()=>alert(txt);
+            controls.appendChild(btn);
+          });
+          card.appendChild(controls);
+        }
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+      app.appendChild(container);
+    }
+
+    // ===== Fungsi Interaksi =====
+    function checkPassword(){
+      if(state.passInput===state.DEFAULT_PASSWORD){ state.auth=true; state.passInput=""; state.error=""; }
+      else state.error="Password salah";
+      render();
+    }
+
+    function updateAlbum(){
+      const album = state.albums.find(a=>a.id===state.selectedAlbumId);
+      if(album){ album[state.fieldToEdit]=state.newValue; state.newValue=""; render(); }
+    }
+    function addAlbum(){
+      const newId = Math.max(...state.albums.map(a=>a.id))+1;
+      state.albums.push({ id:newId, title:"Album Baru", link:"", open:false, slideshowIndex:0 });
+      state.selectedAlbumId=newId;
+      render();
+    }
+    function deleteAlbum(){
+      state.albums = state.albums.filter(a=>a.id!==state.selectedAlbumId);
+      state.selectedAlbumId = state.albums[0]?.id || null;
+      render();
+    }
+    function resetPassword(){ state.DEFAULT_PASSWORD="12345"; alert("Password telah di-reset ke default"); }
+    function renewPassword(){ if(state.newPassword){ state.DEFAULT_PASSWORD=state.newPassword; state.newPassword=""; alert("Password berhasil diperbarui"); render(); } }
+    function changeBackground(){ if(state.newBg){ state.bgImages=[state.newBg]; state.newBg=""; alert("Background utama diperbarui"); render(); } }
+
+    // ===== Slideshow otomatis =====
+    setInterval(()=>{
+      state.albums.forEach(a=>{ if(a.open){ a.slideshowIndex=(a.slideshowIndex+1)%5; } });
+    },3000);
+
+    // ===== Render Awal =====
+    render();
+  </script>
 </body>
 </html>
