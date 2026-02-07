@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album Foto Pribadi</title>
+<style>
+body { margin:0; padding:0; font-family: Arial, sans-serif; }
+.album-container { padding: 20px; background: linear-gradient(135deg, #ffe3ec, #e0f7fa); min-height: 100vh; }
+.menu-bar { display:flex; gap:15px; margin-bottom:20px; justify-content:center; align-items:center; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); padding:10px 20px; border-radius:15px; }
+.menu-bar button { background: linear-gradient(135deg, #89f7fe, #66a6ff); border:none; padding:8px 15px; border-radius:10px; cursor:pointer; font-weight:bold; color:#fff; transition: all 0.3s ease; }
+.menu-bar button:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(102,166,255,0.6); }
+.album-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:20px; }
+.album-card { position:relative; border-radius:15px; overflow:hidden; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border:2px solid rgba(255,255,255,0.3); transition: all 0.3s ease; }
+.album-card:hover { box-shadow: 0 0 20px rgba(0,0,0,0.3); border-color: #00f0ff; }
+.album-title { text-align:center; padding:10px 0; font-weight:bold; color:#333; font-size:16px; cursor:pointer; }
+.album-frame { width:100%; height:0; border:none; border-radius:10px; transition: height 0.5s ease; }
+.album-frame.open { height:400px; }
+.login-container { display:flex; justify-content:center; align-items:center; height:100vh; position:relative; overflow:hidden; }
+.login-background { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.3; z-index:0; animation: slideBg 15s infinite; }
+@keyframes slideBg { 0%,33%,66%,100%{opacity:0.3;} }
+.login-box { position:relative; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); padding:30px; border-radius:15px; display:flex; flex-direction:column; gap:10px; z-index:1; }
+.error-text { color:red; }
+</style>
+</head>
+<body>
+<div class="login-container">
+  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60" class="login-background" alt="bg">
+  <div class="login-box">
+    <h2>Masukkan Password</h2>
+    <input type="password" id="passInput" placeholder="Password">
+    <p class="error-text" id="errorText"></p>
+    <button id="loginBtn">Masuk</button>
+  </div>
+</div>
+
+<div class="album-container" style="display:none;">
+  <div class="menu-bar">
+    <button id="logoutBtn">Keluar</button>
+  </div>
+  <div class="album-grid" id="albumGrid"></div>
+</div>
+
+<script>
+let DEFAULT_PASSWORD = '12345';
+const albums = [
+  {id:1, title:'Dokumen Penting', link:'https://drive.google.com/embeddedfolderview?id=139FME2cPBYOlr8c-e4XrGv8NwT5Oc1-i#grid'},
+  {id:2, title:'Liburan Bali', link:'https://drive.google.com/embeddedfolderview?id=1-example-bali#grid'},
+  {id:3, title:'Ulang Tahun', link:'https://drive.google.com/embeddedfolderview?id=2-example-birthday#grid'},
+  {id:4, title:'Kegiatan Sekolah', link:'https://drive.google.com/embeddedfolderview?id=3-example-school#grid'},
+  {id:5, title:'Foto Keluarga', link:'https://drive.google.com/embeddedfolderview?id=4-example-family#grid'}
+];
+
+const loginContainer = document.querySelector('.login-container');
+const albumContainer = document.querySelector('.album-container');
+const passInput = document.getElementById('passInput');
+const errorText = document.getElementById('errorText');
+const loginBtn = document.getElementById('loginBtn');
+const albumGrid = document.getElementById('albumGrid');
+const logoutBtn = document.getElementById('logoutBtn');
+
+function showAlbums(){
+  albumGrid.innerHTML='';
+  albums.forEach(album => {
+    const card = document.createElement('div');
+    card.className='album-card';
+    const title = document.createElement('div');
+    title.className='album-title';
+    title.textContent=album.title;
+    const frame = document.createElement('iframe');
+    frame.src=album.link;
+    frame.className='album-frame';
+    title.onclick = () => frame.classList.toggle('open');
+    card.appendChild(title);
+    card.appendChild(frame);
+    albumGrid.appendChild(card);
+  });
+}
+
+function login(){
+  if(passInput.value === DEFAULT_PASSWORD){
+    loginContainer.style.display='none';
+    albumContainer.style.display='block';
+    showAlbums();
+  } else { errorText.textContent='Password salah'; }
+}
+
+loginBtn.addEventListener('click', login);
+passInput.addEventListener('keydown', (e) => { if(e.key==='Enter') login(); });
+
+logoutBtn.addEventListener('click', () => {
+  albumContainer.style.display='none';
+  loginContainer.style.display='flex';
+  passInput.value='';
+  errorText.textContent='';
+});
+</script>
+</body>
+</html>
